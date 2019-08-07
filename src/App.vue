@@ -1,28 +1,46 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="editor">
+    <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
+      <div>
+        <button :class="{ 'is-active': isActive.bold() }" @click="commands.bold">
+          Bold
+        </button>
+        <button :class="{ 'is-active': isActive.italic() }" @click="commands.italic">
+          Italic
+        </button>
+      </div>
+    </editor-menu-bar>
+    <editor-content :editor="editor" />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+// Import the basic building blocks
+import { Editor, EditorContent, EditorMenuBar} from 'tiptap'
+//import { Editor } from 'tiptap'
+import { Bold, Italic, Link, HardBreak, Heading } from 'tiptap-extensions'
 
 export default {
-  name: 'app',
   components: {
-    HelloWorld
-  }
+    EditorMenuBar,
+    EditorContent,
+  },
+  data() {
+    return {
+      editor: new Editor({
+        content: 'aaaa',
+        extensions: [
+          new Bold(),
+          new Italic(),
+          new Link(),
+          new HardBreak(),
+          new Heading(),
+        ],
+      }),
+    }
+  },
+  beforeDestroy() {
+    this.editor.destroy()
+  },
 }
 </script>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
